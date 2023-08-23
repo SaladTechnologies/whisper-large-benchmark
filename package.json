@@ -2,9 +2,9 @@
   "author": "Shawn Rushefsky",
   "bin": "./dist/index.js",
   "bugs": {
-    "url": "https://github.com/SaladTechnologies/sdnext-benchmark/issues"
+    "url": "https://github.com/SaladTechnologies/whisper-large-benchmark/issues"
   },
-  "description": "A benchmarking utility to be used with the sdnext container",
+  "description": "A benchmarking utility to be used with the whisper large container",
   "devDependencies": {
     "@types/node": "^20.4.8",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
@@ -15,15 +15,15 @@
   },
   "homepage": "https://github.com/SaladTechnologies/sdnext-benchmark#readme",
   "keywords": [
-    "sdenext",
+    "whisper",
     "benchmark"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "dist/src/index.js",
-  "name": "sdnext-benchmark",
+  "name": "whisper-large-benchmark",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SaladTechnologies/sdnext-benchmark.git"
+    "url": "git+https://github.com/SaladTechnologies/whisper-large-benchmark.git"
   },
   "scripts": {
     "build": "tsc",

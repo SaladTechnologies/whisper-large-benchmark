@@ -10,7 +10,7 @@ RUN npm run build
 RUN npx pkg -t node18-linux-x64 --out-path ./benchmark-worker .
 
 # And then copy it into the inference image
-FROM saladtechnologies/sdnext-sdxl10:latest
+FROM saladtechnologies/whisper-large:latest
 
 COPY --from=build /app/benchmark-worker ./benchmark-worker
 
@@ -21,12 +21,5 @@ ENTRYPOINT []
 CMD [\
   "/bin/bash",\
   "-c",\
-  "${INSTALLDIR}/entrypoint.sh \
-  --listen \
-  --no-download \
-  --backend diffusers \
-  --use-cuda \
-  --ckpt ${CKPT} \
-  --docs \
-  --quick \
-  & benchmark-worker/sdnext-benchmark"]
+  "uvicorn web:app --port 1111 --host localhost \
+  & benchmark-worker/whisper-large-benchmark"]
