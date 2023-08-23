@@ -1,4 +1,4 @@
-import { WhisperRequest, WhisperResponse, QueueMessage, DeleteQueueMessageResponse, TranscriptionJobRaw, TranscriptionJob } from "./types";
+import { WhisperRequest, WhisperResponse, QueueMessage, DeleteQueueMessageResponse, TranscriptionJobRaw, TranscriptionJob, GetJobFromQueueResponse } from "./types";
 import fs from "node:fs";
 
 const { 
@@ -46,21 +46,30 @@ async function recordResult(result: { clipId: string, transcription: string, tim
  * 
  * @returns A job to submit to the server
  */
-async function getJob(): Promise<TranscriptionJob> {
+async function getJob(): Promise<TranscriptionJob | null> {
   const url = new URL(`/${QUEUE_NAME}`, QUEUE_URL);
 
-  const jobResponse = await fetch(url.toString());
-  const queueMessage = await jobResponse.json() as QueueMessage;
-  const job = JSON.parse(queueMessage.body) as TranscriptionJobRaw;
+  const jobResponse = await fetch(url.toString(), {
+    method: "GET",
+    headers: {
+      [REPORTING_AUTH_HEADER]: REPORTING_API_KEY,
+    },
+  });
+  const queueMessage = await jobResponse.json() as GetJobFromQueueResponse;
+  if (queueMessage.messages?.length) {
+    const job = JSON.parse(queueMessage.messages[0].body) as TranscriptionJobRaw;
 
-  const clipResponse = await fetch(job.url);
-  const clip = await clipResponse.arrayBuffer();
+    const clipResponse = await fetch(job.url);
+    const clip = await clipResponse.arrayBuffer();
 
-  return {
-    messageId: queueMessage.messageId,
-    clip: Buffer.from(clip),
-    clipId: job.clipId,
-  };
+    return {
+      messageId: queueMessage.messages[0].messageId,
+      clip: Buffer.from(clip),
+      clipId: job.clipId,
+    };
+  } else {
+    return null;
+  }
 }
 
 /**
@@ -70,7 +79,7 @@ async function getJob(): Promise<TranscriptionJob> {
  */
 async function submitJob(job: WhisperRequest): Promise<WhisperResponse> {
   // POST to SDNEXT_URL
-  const url = new URL("/generate", WHISPER_URL);
+  const url = new URL("/generate/", WHISPER_URL);
   const response = await fetch(url.toString(), {
     method: "POST", 
     body: job,
@@ -156,6 +165,7 @@ async function main(): Promise<void> {
 
   // This serves as the final pre-flight check
   let response = await submitJob(testJob);
+  prettyPrint(response);
 
   const loadEnd = Date.now();
   const loadElapsed = loadEnd - loadStart;
@@ -166,6 +176,11 @@ async function main(): Promise<void> {
   while (stayAlive && (benchmarkSize < 0 || numTranscriptions < benchmarkSize)) {
     console.log("Fetching Job...");
     const job = await getJob();
+    if (job === null) {
+      console.log("No jobs available, waiting...");
+      await sleep(1000);
+      continue;
+    }
 
     console.log("Submitting Job...");
     const jobStart = Date.now();
