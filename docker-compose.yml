@@ -3,6 +3,9 @@ version: '3'
 services:
   sdxl-benchmark:
     image: saladtechnologies/whisper-large-benchmark:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     deploy:
       resources:
         reservations:

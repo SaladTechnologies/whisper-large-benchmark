@@ -21,7 +21,7 @@ const benchmarkSize = parseInt(BENCHMARK_SIZE, 10);
  * You can change this to whatever you want, and there are a lot
  * of options. See the SDNext API docs for more info.
  */
-const testJob: WhisperRequest = fs.readFileSync("./test-sound.wav");
+const testJob: WhisperRequest = fs.readFileSync("./Recording.wav");
 
 /**
  * You can replace this function with your own implementation.
