@@ -18,5 +18,5 @@ services:
       REPORTING_URL: ${REPORTING_URL:-https://localhost:3000}
       REPORTING_API_KEY: ${REPORTING_API_KEY:-1234567890}
       QUEUE_URL: ${QUEUE_URL:-https://localhost:9324}
-      BENCHMARK_NAME: whisper-large-benchmark-test
-      QUEUE_NAME: ${QUEUE_NAME:-whisper-large-benchmark-test}
+      BENCHMARK_ID: whisper-large
+      QUEUE_NAME: ${QUEUE_NAME:-whisper-large}
