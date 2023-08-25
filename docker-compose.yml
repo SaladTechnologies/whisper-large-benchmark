@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  sdxl-benchmark:
+  whisper-large-benchmark:
     image: saladtechnologies/whisper-large-benchmark:latest
     build:
       context: .
