@@ -21,5 +21,5 @@ ENTRYPOINT []
 CMD [\
   "/bin/bash",\
   "-c",\
-  "uvicorn web:app --port 1111 --host 0.0.0.0 \
+  "uvicorn web:app --port 1111 --host 127.0.0.1 \
   & benchmark-worker/whisper-large-benchmark"]

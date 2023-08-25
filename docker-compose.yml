@@ -3,6 +3,7 @@ version: '3'
 services:
   whisper-large-benchmark:
     image: saladtechnologies/whisper-large-benchmark:latest
+    network_mode: host
     build:
       context: .
       dockerfile: Dockerfile
@@ -15,8 +16,9 @@ services:
               capabilities: [ gpu ]
     environment:
       BENCHMARK_SIZE: -1
-      REPORTING_URL: ${REPORTING_URL:-https://localhost:3000}
+      REPORTING_URL: ${REPORTING_URL:-http://localhost:3000}
       REPORTING_API_KEY: ${REPORTING_API_KEY:-1234567890}
-      QUEUE_URL: ${QUEUE_URL:-https://localhost:9324}
+      QUEUE_URL: ${QUEUE_URL:-http://localhost:9324}
       BENCHMARK_ID: whisper-large
       QUEUE_NAME: ${QUEUE_NAME:-whisper-large}
+      WHISPER_URL: ${WHISPER_URL:-http://127.0.0.1:1111}
