@@ -96,6 +96,9 @@ async function markJobComplete(job: TranscriptionJob): Promise<DeleteQueueMessag
   const url = new URL(`/${QUEUE_NAME}/${encodeURIComponent(job.messageId)}`, QUEUE_URL);
   const response = await fetch(url.toString(), {
     method: "DELETE",
+    headers: {
+      [REPORTING_AUTH_HEADER]: REPORTING_API_KEY,
+    },
   });
   const json = await response.json() as DeleteQueueMessageResponse;
 
@@ -188,6 +191,10 @@ async function main(): Promise<void> {
     const jobEnd = Date.now();
     const jobElapsed = jobEnd - jobStart;
     console.log(`Clip ${job.clipId} took ${jobElapsed}ms`);
+    if (!response.text) {
+      console.log("No transcription returned, skipping...");
+      console.log(response);
+    }
     recordResult({
       clipId: job.clipId,
       transcription: response.text,
