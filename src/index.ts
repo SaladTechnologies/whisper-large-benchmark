@@ -178,7 +178,11 @@ async function main(): Promise<void> {
   const start = Date.now();
   while (stayAlive && (benchmarkSize < 0 || numTranscriptions < benchmarkSize)) {
     console.log("Fetching Job...");
+    const fetchJobStart = Date.now();
     const job = await getJob();
+    const fetchJobEnd = Date.now();
+    const fetchJobElapsed = fetchJobEnd - fetchJobStart;
+    console.log(`Fetched job in ${fetchJobElapsed}ms`);
     if (job === null) {
       console.log("No jobs available, waiting...");
       await sleep(1000);

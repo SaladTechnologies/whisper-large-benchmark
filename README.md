@@ -30,5 +30,5 @@ The `BENCHMARK_SIZE` environment variable can be adjusted to change the size of 
 To build the image, run the following command:
 
 ```bash
-docker build -t saladtechnologies/whisper-large-benchmark:latest .
+docker buildx build -t saladtechnologies/whisper-large-benchmark:latest --provenance=false --output type=docker .
 ```
